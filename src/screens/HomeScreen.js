@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity } from 'react-native';
 import Note from '../components/Note';
+import NoteButton from '../components/NoteButton';
 
 const HomeScreen = () => {
 
@@ -19,22 +20,17 @@ const HomeScreen = () => {
   const [note, setNote] = useState('');
   const [id, setID] = useState(0);
 
-  const addItem = () => {
+  const addItem = (color) => {
+    console.log(color);
     if(title == '' || note == '') {
       Alert.alert(
          'Please enter a valid title and note...'
       );
       return;
-    } else {
+    }
+    else {
       setID(id + 1);
-      setNotes([
-        {
-          title: `${title}`,
-          text: `${note}`,
-          id: `${id}`
-        },
-        ...notes
-      ]);
+      setNotes([{title: `${title}`, text: `${note}`, id: `${id}`, color: `${color}`}, ...notes]);
       setTitle('');
       setNote('');
     }
@@ -46,7 +42,7 @@ const HomeScreen = () => {
         keyExtractor={notes => notes.id}
         data={notes}
         renderItem={({item}) => {
-          return <Note title={item.title} text={item.text} />
+          return <Note title={item.title} text={item.text} color={item.color} />
         }}
       />
       <TextInput
@@ -62,7 +58,13 @@ const HomeScreen = () => {
         value={note}
         onChangeText={(newValue) => setNote(newValue)}
       />
-      <Button title="Add Note" onPress={addItem} />
+      <View style={styles.colorView}>
+        <NoteButton title="Add Note" color="rgb(255, 255, 102)" onPress={addItem.bind(this, "rgb(255, 255, 102)")} />
+        <NoteButton title="Add Note" color="rgb(255, 102, 102)" onPress={addItem.bind(this, "rgb(255, 102, 102)")} />
+        <NoteButton title="Add Note" color="rgb(153, 204, 255)" onPress={addItem.bind(this, "rgb(153, 204, 255)")} />
+        <NoteButton title="Add Note" color="rgb(102, 255, 153)" onPress={addItem.bind(this, "rgb(102, 255, 153)")} />
+      </View>
+
     </KeyboardAvoidingView>
   );
 };
@@ -85,6 +87,11 @@ const styles = StyleSheet.create({
     padding: 5,
     borderColor: 'rgb(217, 217, 217)',
     borderWidth: 1,
+  },
+  colorView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   }
 });
 
